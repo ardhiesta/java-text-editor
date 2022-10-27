@@ -16,12 +16,16 @@ public class App {
 
     // save button
     static JButton jButtonSave;
-    static String pathname = "bin//tmp//sample.txt";
+
+    // file chooser
+    static JFileChooser jButtonChooser;
+
     static String bacaFile(){
         String isiFile = "";
         try {
-            // ganti "/tmp/sample3.data" dengan path file teks yang akan dibaca
-            File myObj = new File(pathname);
+            jButtonChooser  = new JFileChooser();
+            jButtonChooser.showSaveDialog(jButtonChooser);
+            File myObj =  jButtonChooser.getSelectedFile();
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 isiFile = isiFile + myReader.nextLine();
@@ -43,8 +47,6 @@ public class App {
         // create a text area, specifying the rows and columns
         jTextArea = new JTextArea("test");
 
-        
-
         Font font = new Font("Verdana", Font.BOLD, 20);
         jTextArea.setFont(font);
 
@@ -56,28 +58,24 @@ public class App {
         jButtonSave.setBounds(5,400,80,30);  
         
         jButtonSave.addActionListener(new ActionListener(){  
-            public void actionPerformed(ActionEvent e) {  
-                        File path = new File(pathname);
-                            try (FileWriter fileWriter = new FileWriter(path)) {
-                                PrintWriter printWriter = new PrintWriter(fileWriter);
-                                printWriter.print(jTextArea.getText());
-                                printWriter.close();
-                                JOptionPane.showMessageDialog(null, "File Telah disimpan");
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
-                            }
-                        
-                    }  
-                });  
+            public void actionPerformed(ActionEvent e) { 
+                File path =  jButtonChooser.getSelectedFile();
+                try (FileWriter fileWriter = new FileWriter(path)) {
+                    PrintWriter printWriter = new PrintWriter(fileWriter);
+                    printWriter.print(jTextArea.getText());
+                    printWriter.close();
+                    JOptionPane.showMessageDialog(null, "File Telah disimpan");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }    
+            }  
+        });  
         // jFrame
         jFrame.add(jTextArea);
         jFrame.add(jButtonSave);
         // set the size of frame
         jFrame.setSize(400, 500);
         jFrame.setLayout(null);
-        jFrame.setVisible(true); 
-        
-
-        
+        jFrame.setVisible(true);   
     }
 }
